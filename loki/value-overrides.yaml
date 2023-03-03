@@ -19,7 +19,7 @@ nameOverride: null
 fullnameOverride: null
 
 # -- Image pull secrets for Docker images
-imagePullSecrets: []
+imagePullSecrets: [ ]
 
 kubectlImage:
   # -- The Docker registry
@@ -51,9 +51,9 @@ loki:
     # -- Docker image pull policy
     pullPolicy: IfNotPresent
   # -- Common annotations for all pods
-  podAnnotations: {}
+  podAnnotations: { }
   # -- Common labels for all pods
-  podLabels: {}
+  podLabels: { }
   # -- The number of old ReplicaSets to retain to allow rollback
   revisionHistoryLimit: 10
   # -- The SecurityContext for Loki pods
@@ -201,7 +201,7 @@ loki:
     {{- end }}
 
   # Should authentication be enabled
-  auth_enabled: true
+  auth_enabled: false
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#server for more info on the server configuration.
   server:
@@ -217,12 +217,12 @@ loki:
     split_queries_by_interval: 15m
 
   # -- Provides a reloadable runtime configuration file for some specific configuration
-  runtimeConfig: {}
+  runtimeConfig: { }
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
   commonConfig:
     path_prefix: /var/loki
-    replication_factor: 3
+    replication_factor: 1
 
   # -- Storage config. Providing this will automatically populate all necessary storage configs in the templated config.
   storage:
@@ -239,7 +239,7 @@ loki:
       accessKeyId: null
       s3ForcePathStyle: false
       insecure: false
-      http_config: {}
+      http_config: { }
     gcs:
       chunkBufferSize: 0
       requestTimeout: "0s"
@@ -272,16 +272,16 @@ loki:
       default_validity: "12h"
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
-  schemaConfig: {}
+  schemaConfig: { }
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#ruler for more info on configuring ruler
-  rulerConfig: {}
+  rulerConfig: { }
 
   # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
-  structuredConfig: {}
+  structuredConfig: { }
 
   # -- Additional query scheduler config
-  query_scheduler: {}
+  query_scheduler: { }
 
   # -- Additional storage config
   storage_config:
@@ -291,16 +291,16 @@ loki:
       up_to: 3
 
   # --  Optional compactor configuration
-  compactor: {}
+  compactor: { }
 
   # --  Optional analytics configuration
-  analytics: {}
+  analytics: { }
 
   # --  Optional querier configuration
-  querier: {}
+  querier: { }
 
   # --  Optional ingester configuration
-  ingester: {}
+  ingester: { }
 
 enterprise:
   # Enable enterprise features, license must be provided
@@ -370,7 +370,7 @@ enterprise:
     secret: null
     # -- Additional namespace to also create the token in. Useful if your Grafana instance
     # is in a different namespace
-    additionalNamespaces: []
+    additionalNamespaces: [ ]
 
   # -- Alternative name of the secret to store token for the canary
   canarySecret: null
@@ -382,19 +382,19 @@ enterprise:
     # -- Comma-separated list of Loki modules to load for tokengen
     targetModule: "tokengen"
     # -- Additional CLI arguments for the `tokengen` target
-    extraArgs: []
+    extraArgs: [ ]
     # -- Additional Kubernetes environment
-    env: []
+    env: [ ]
     # -- Additional labels for the `tokengen` Job
-    labels: {}
+    labels: { }
     # -- Additional annotations for the `tokengen` Job
-    annotations: {}
+    annotations: { }
     # -- Tolerations for tokengen Job
-    tolerations: []
+    tolerations: [ ]
     # -- Additional volumes for Pods
-    extraVolumes: []
+    extraVolumes: [ ]
     # -- Additional volume mounts for Pods
-    extraVolumeMounts: []
+    extraVolumeMounts: [ ]
     # -- Run containers as user `enterprise-logs(uid=10001)`
     securityContext:
       runAsNonRoot: true
@@ -402,7 +402,7 @@ enterprise:
       runAsUser: 10001
       fsGroup: 10001
     # -- Environment variables from secrets or configmaps to add to the tokengen pods
-    extraEnvFrom: []
+    extraEnvFrom: [ ]
     # -- The name of the PriorityClass for tokengen Pods
     priorityClassName: ""
 
@@ -418,13 +418,13 @@ enterprise:
     # additionalTenants:
     #   - name: loki
     #     secretNamespace: grafana
-    additionalTenants: []
+    additionalTenants: [ ]
     # -- Additional Kubernetes environment
-    env: []
+    env: [ ]
     # -- Additional labels for the `provisioner` Job
-    labels: {}
+    labels: { }
     # -- Additional annotations for the `provisioner` Job
-    annotations: {}
+    annotations: { }
     # -- The name of the PriorityClass for provisioner Job
     priorityClassName: null
     # -- Run containers as user `enterprise-logs(uid=10001)`
@@ -444,7 +444,7 @@ enterprise:
       # -- Docker image pull policy
       pullPolicy: IfNotPresent
     # -- Volume mounts to add to the provisioner pods
-    extraVolumeMounts: []
+    extraVolumeMounts: [ ]
 
 # -- Options that may be necessary when performing a migration from another helm chart
 migrate:
@@ -463,11 +463,11 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: null
   # -- Image pull secrets for the service account
-  imagePullSecrets: []
+  imagePullSecrets: [ ]
   # -- Annotations for the service account
-  annotations: {}
+  annotations: { }
   # -- Labels for the service account
-  labels: {}
+  labels: { }
   # -- Set this toggle to false to opt out of automounting API credentials for the service account
   automountServiceAccountToken: true
 
@@ -482,13 +482,13 @@ rbac:
 test:
   enabled: true
   # -- Address of the prometheus server to query for the test
-  prometheusAddress: "http://prometheus:9090"
+  prometheusAddress: "http://prometheus-operated.monitoring.svc.cluster.local:9090"
   # -- Number of times to retry the test before failing
   timeout: 1m
   # -- Additional labels for the test pods
-  labels: {}
+  labels: { }
   # -- Additional annotations for test pods
-  annotations: {}
+  annotations: { }
   # -- Image to use for loki canary
   image:
     # -- The Docker registry
@@ -507,11 +507,11 @@ monitoring:
     # -- If enabled, create configmap with dashboards for monitoring Loki
     enabled: true
     # -- Alternative namespace to create dashboards ConfigMap in
-    namespace: null
+    namespace: monitoring
     # -- Additional annotations for the dashboards ConfigMap
-    annotations: {}
+    annotations: { }
     # -- Additional labels for the dashboards ConfigMap
-    labels: {}
+    labels: { }
 
   # Recording rules for monitoring Loki, required for some dashboards
   rules:
@@ -520,37 +520,37 @@ monitoring:
     # -- Include alerting rules
     alerting: true
     # -- Additional annotations for the rules PrometheusRule resource
-    annotations: {}
+    annotations: { }
     # -- Additional labels for the rules PrometheusRule resource
-    labels: {}
+    labels: { }
     # -- Additional groups to add to the rules file
-    additionalGroups: []
-    # - name: additional-loki-rules
-    #   rules:
-    #     - record: job:loki_request_duration_seconds_bucket:sum_rate
-    #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
-    #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
-    #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
-    #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
-    #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
+    additionalGroups:
+      - name: additional-loki-rules
+        rules:
+          - record: job:loki_request_duration_seconds_bucket:sum_rate
+            expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
+          - record: job_route:loki_request_duration_seconds_bucket:sum_rate
+            expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
+          - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+            expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
 
   # ServiceMonitor configuration
   serviceMonitor:
     # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
     enabled: true
     # -- Namespace selector for ServiceMonitor resources
-    namespaceSelector: {}
+    namespaceSelector: { }
     # -- ServiceMonitor annotations
-    annotations: {}
+    annotations: { }
     # -- Additional ServiceMonitor labels
-    labels: {}
+    labels: { }
     # -- ServiceMonitor scrape interval
     interval: null
     # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
     scrapeTimeout: null
     # -- ServiceMonitor relabel configs to apply to samples before scraping
     # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-    relabelings: []
+    relabelings: [ ]
     # -- ServiceMonitor will use http by default, but you can pick https as well
     scheme: http
     # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
@@ -560,9 +560,9 @@ monitoring:
       # -- If enabled, MetricsInstance resources for Grafana Agent Operator are created
       enabled: true
       # -- MetricsInstance annotations
-      annotations: {}
+      annotations: { }
       # -- Additional MetricsInstance labels
-      labels: {}
+      labels: { }
       # -- If defined a MetricsInstance will be created to remote write metrics.
       remoteWrite: null
 
@@ -589,28 +589,28 @@ monitoring:
       # In that case install the CRDs manually from https://github.com/grafana/agent/tree/main/production/operator/crds
       installOperator: true
       # -- Grafana Agent annotations
-      annotations: {}
+      annotations: { }
       # -- Additional Grafana Agent labels
-      labels: {}
+      labels: { }
       # -- Enable the config read api on port 8080 of the agent
       enableConfigReadAPI: false
 
     # PodLogs configuration
     podLogs:
       # -- PodLogs annotations
-      annotations: {}
+      annotations: { }
       # -- Additional PodLogs labels
-      labels: {}
+      labels: { }
       # -- PodLogs relabel configs to apply to samples before scraping
       # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-      relabelings: []
+      relabelings: [ ]
 
     # LogsInstance configuration
     logsInstance:
       # -- LogsInstance annotations
-      annotations: {}
+      annotations: { }
       # -- Additional LogsInstance labels
-      labels: {}
+      labels: { }
       # -- Additional clients for remote write
       clients: null
 
@@ -619,19 +619,19 @@ monitoring:
   lokiCanary:
     enabled: true
     # -- Additional annotations for the `loki-canary` Daemonset
-    annotations: {}
+    annotations: { }
     # -- Additional CLI arguments for the `loki-canary' command
-    extraArgs: []
+    extraArgs: [ ]
     # -- Environment variables to add to the canary pods
-    extraEnv: []
+    extraEnv: [ ]
     # -- Environment variables from secrets or configmaps to add to the canary pods
-    extraEnvFrom: []
+    extraEnvFrom: [ ]
     # -- Resource requests and limits for the canary
-    resources: {}
+    resources: { }
     # -- Node selector for canary pods
-    nodeSelector: {}
+    nodeSelector: { }
     # -- Tolerations for canary pods
-    tolerations: []
+    tolerations: [ ]
     # -- Image to use for loki canary
     image:
       # -- The Docker registry
@@ -646,7 +646,7 @@ monitoring:
 # Configuration for the write pod(s)
 write:
   # -- Number of replicas for the write
-  replicas: 3
+  replicas: 1
   image:
     # -- The Docker registry for the write image. Overrides `loki.image.registry`
     registry: null
@@ -657,29 +657,29 @@ write:
   # -- The name of the PriorityClass for write pods
   priorityClassName: null
   # -- Annotations for write pods
-  podAnnotations: {}
+  podAnnotations: { }
   # -- Additional labels for each `write` pod
-  podLabels: {}
+  podLabels: { }
   # -- Additional selector labels for each `write` pod
-  selectorLabels: {}
+  selectorLabels: { }
   # -- Labels for ingestor service
-  serviceLabels: {}
+  serviceLabels: { }
   # -- Comma-separated list of Loki modules to load for the write
   targetModule: "write"
   # -- Additional CLI args for the write
-  extraArgs: []
+  extraArgs: [ ]
   # -- Environment variables to add to the write pods
-  extraEnv: []
+  extraEnv: [ ]
   # -- Environment variables from secrets or configmaps to add to the write pods
-  extraEnvFrom: []
+  extraEnvFrom: [ ]
   # -- Lifecycle for the write container
-  lifecycle: {}
+  lifecycle: { }
   # -- Volume mounts to add to the write pods
-  extraVolumeMounts: []
+  extraVolumeMounts: [ ]
   # -- Volumes to add to the write pods
-  extraVolumes: []
+  extraVolumes: [ ]
   # -- Resource requests and limits for the write
-  resources: {}
+  resources: { }
   # -- Grace period to allow the write to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so writes can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -694,9 +694,9 @@ write:
               {{- include "loki.writeSelectorLabels" . | nindent 10 }}
           topologyKey: kubernetes.io/hostname
   # -- Node selector for write pods
-  nodeSelector: {}
+  nodeSelector: { }
   # -- Tolerations for write pods
-  tolerations: []
+  tolerations: [ ]
   persistence:
     # -- Size of persistent disk
     size: 10Gi
@@ -725,25 +725,25 @@ tableManager:
   # -- The name of the PriorityClass for table-manager pods
   priorityClassName: null
   # -- Labels for table-manager pods
-  podLabels: {}
+  podLabels: { }
   # -- Annotations for table-manager pods
-  podAnnotations: {}
+  podAnnotations: { }
   # -- Labels for table-manager service
-  serviceLabels: {}
+  serviceLabels: { }
   # -- Additional CLI args for the table-manager
-  extraArgs: []
+  extraArgs: [ ]
   # -- Environment variables to add to the table-manager pods
-  extraEnv: []
+  extraEnv: [ ]
   # -- Environment variables from secrets or configmaps to add to the table-manager pods
-  extraEnvFrom: []
+  extraEnvFrom: [ ]
   # -- Volume mounts to add to the table-manager pods
-  extraVolumeMounts: []
+  extraVolumeMounts: [ ]
   # -- Volumes to add to the table-manager pods
-  extraVolumes: []
+  extraVolumes: [ ]
   # -- Resource requests and limits for the table-manager
-  resources: {}
+  resources: { }
   # -- Containers to add to the table-manager pods
-  extraContainers: []
+  extraContainers: [ ]
   # -- Grace period to allow the table-manager to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string
@@ -763,9 +763,9 @@ tableManager:
                 {{- include "loki.tableManagerSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for table-manager pods
-  nodeSelector: {}
+  nodeSelector: { }
   # -- Tolerations for table-manager pods
-  tolerations: []
+  tolerations: [ ]
 
 # Configuration for the read pod(s)
 read:
@@ -792,13 +792,13 @@ read:
   # -- The name of the PriorityClass for read pods
   priorityClassName: null
   # -- Annotations for read pods
-  podAnnotations: {}
+  podAnnotations: { }
   # -- Additional labels for each `read` pod
-  podLabels: {}
+  podLabels: { }
   # -- Additional selector labels for each `read` pod
-  selectorLabels: {}
+  selectorLabels: { }
   # -- Labels for read service
-  serviceLabels: {}
+  serviceLabels: { }
   # -- Comma-separated list of Loki modules to load for the read
   targetModule: "read"
   # -- Whether or not to use the 2 target type simple scalable mode (read, write) or the
@@ -806,19 +806,19 @@ read:
   # run two targets, false will run 3 targets.
   legacyReadTarget: false
   # -- Additional CLI args for the read
-  extraArgs: []
+  extraArgs: [ ]
   # -- Environment variables to add to the read pods
-  extraEnv: []
+  extraEnv: [ ]
   # -- Environment variables from secrets or configmaps to add to the read pods
-  extraEnvFrom: []
+  extraEnvFrom: [ ]
   # -- Lifecycle for the read container
-  lifecycle: {}
+  lifecycle: { }
   # -- Volume mounts to add to the read pods
-  extraVolumeMounts: []
+  extraVolumeMounts: [ ]
   # -- Volumes to add to the read pods
-  extraVolumes: []
+  extraVolumes: [ ]
   # -- Resource requests and limits for the read
-  resources: {}
+  resources: { }
   # -- Grace period to allow the read to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for read pods. Passed through `tpl` and, thus, to be configured as string
@@ -831,9 +831,9 @@ read:
               {{- include "loki.readSelectorLabels" . | nindent 10 }}
           topologyKey: kubernetes.io/hostname
   # -- Node selector for read pods
-  nodeSelector: {}
+  nodeSelector: { }
   # -- Tolerations for read pods
-  tolerations: []
+  tolerations: [ ]
   persistence:
     # -- Enable StatefulSetAutoDeletePVC feature
     enableStatefulSetAutoDeletePVC: true
@@ -862,25 +862,25 @@ backend:
   # -- The name of the PriorityClass for backend pods
   priorityClassName: null
   # -- Annotations for backend pods
-  podAnnotations: {}
+  podAnnotations: { }
   # -- Additional selector labels for each `backend` pod
-  selectorLabels: {}
+  selectorLabels: { }
   # -- Labels for ingestor service
-  serviceLabels: {}
+  serviceLabels: { }
   # -- Comma-separated list of Loki modules to load for the read
   targetModule: "backend"
   # -- Additional CLI args for the backend
-  extraArgs: []
+  extraArgs: [ ]
   # -- Environment variables to add to the backend pods
-  extraEnv: []
+  extraEnv: [ ]
   # -- Environment variables from secrets or configmaps to add to the backend pods
-  extraEnvFrom: []
+  extraEnvFrom: [ ]
   # -- Volume mounts to add to the backend pods
-  extraVolumeMounts: []
+  extraVolumeMounts: [ ]
   # -- Volumes to add to the backend pods
-  extraVolumes: []
+  extraVolumes: [ ]
   # -- Resource requests and limits for the backend
-  resources: {}
+  resources: { }
   # -- Grace period to allow the backend to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so backends can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -895,9 +895,9 @@ backend:
               {{- include "loki.backendSelectorLabels" . | nindent 10 }}
           topologyKey: kubernetes.io/hostname
   # -- Node selector for backend pods
-  nodeSelector: {}
+  nodeSelector: { }
   # -- Tolerations for backend pods
-  tolerations: []
+  tolerations: [ ]
   persistence:
     # -- Enable StatefulSetAutoDeletePVC feature
     enableStatefulSetAutoDeletePVC: true
@@ -915,7 +915,7 @@ backend:
 # Configuration for the single binary node(s)
 singleBinary:
   # -- Number of replicas for the single binary
-  replicas: 1
+  replicas: 3
   autoscaling:
     # -- Enable autoscaling, this is only used if `queryIndex.enabled: true`
     enabled: false
@@ -937,25 +937,25 @@ singleBinary:
   # -- The name of the PriorityClass for single binary pods
   priorityClassName: null
   # -- Annotations for single binary pods
-  podAnnotations: {}
+  podAnnotations: { }
   # -- Additional labels for each `single binary` pod
-  podLabels: {}
+  podLabels: { }
   # -- Additional selector labels for each `single binary` pod
-  selectorLabels: {}
+  selectorLabels: { }
   # -- Comma-separated list of Loki modules to load for the single binary
   targetModule: "all"
   # -- Labels for single binary service
-  extraArgs: []
+  extraArgs: [ ]
   # -- Environment variables to add to the single binary pods
-  extraEnv: []
+  extraEnv: [ ]
   # -- Environment variables from secrets or configmaps to add to the single binary pods
-  extraEnvFrom: []
+  extraEnvFrom: [ ]
   # -- Volume mounts to add to the single binary pods
-  extraVolumeMounts: []
+  extraVolumeMounts: [ ]
   # -- Volumes to add to the single binary pods
-  extraVolumes: []
+  extraVolumes: [ ]
   # -- Resource requests and limits for the single binary
-  resources: {}
+  resources: { }
   # -- Grace period to allow the single binary to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for single binary pods. Passed through `tpl` and, thus, to be configured as string
@@ -968,9 +968,9 @@ singleBinary:
               {{- include "loki.singleBinarySelectorLabels" . | nindent 10 }}
           topologyKey: kubernetes.io/hostname
   # -- Node selector for single binary pods
-  nodeSelector: {}
+  nodeSelector: { }
   # -- Tolerations for single binary pods
-  tolerations: []
+  tolerations: [ ]
   persistence:
     # -- Enable persistent disk
     enabled: true
@@ -991,7 +991,7 @@ singleBinary:
 ingress:
   enabled: false
   ingressClassName: ""
-  annotations: {}
+  annotations: { }
   #    nginx.ingress.kubernetes.io/auth-type: basic
   #    nginx.ingress.kubernetes.io/auth-secret: loki-distributed-basic-auth
   #    nginx.ingress.kubernetes.io/auth-secret-type: auth-map
@@ -1022,10 +1022,15 @@ ingress:
 
   hosts:
     - loki.example.com
-  tls: []
+  tls: [ ]
 #    - hosts:
 #       - loki.example.com
 #      secretName: loki-distributed-tls
+
+# Configuration for the memberlist service
+memberlist:
+  service:
+    publishNotReadyAddresses: true
 
 # Configuration for the gateway
 gateway:
@@ -1037,7 +1042,7 @@ gateway:
   verboseLogging: true
   autoscaling:
     # -- Enable autoscaling for the gateway
-    enabled: false
+    enabled: true
     # -- Minimum autoscaling replicas for the gateway
     minReplicas: 1
     # -- Maximum autoscaling replicas for the gateway
@@ -1062,21 +1067,21 @@ gateway:
   # -- The name of the PriorityClass for gateway pods
   priorityClassName: null
   # -- Annotations for gateway pods
-  podAnnotations: {}
+  podAnnotations: { }
   # -- Additional labels for gateway pods
-  podLabels: {}
+  podLabels: { }
   # -- Additional CLI args for the gateway
-  extraArgs: []
+  extraArgs: [ ]
   # -- Environment variables to add to the gateway pods
-  extraEnv: []
+  extraEnv: [ ]
   # -- Environment variables from secrets or configmaps to add to the gateway pods
-  extraEnvFrom: []
+  extraEnvFrom: [ ]
   # -- Lifecycle for the gateway container
-  lifecycle: {}
+  lifecycle: { }
   # -- Volumes to add to the gateway pods
-  extraVolumes: []
+  extraVolumes: [ ]
   # -- Volume mounts to add to the gateway pods
-  extraVolumeMounts: []
+  extraVolumeMounts: [ ]
   # -- The SecurityContext for gateway containers
   podSecurityContext:
     fsGroup: 101
@@ -1091,7 +1096,7 @@ gateway:
         - ALL
     allowPrivilegeEscalation: false
   # -- Resource requests and limits for the gateway
-  resources: {}
+  resources: { }
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
@@ -1104,9 +1109,9 @@ gateway:
               {{- include "loki.gatewaySelectorLabels" . | nindent 10 }}
           topologyKey: kubernetes.io/hostname
   # -- Node selector for gateway pods
-  nodeSelector: {}
+  nodeSelector: { }
   # -- Tolerations for gateway pods
-  tolerations: []
+  tolerations: [ ]
   # Gateway service configuration
   service:
     # -- Port of the gateway service
@@ -1120,9 +1125,9 @@ gateway:
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
     # -- Annotations for the gateway service
-    annotations: {}
+    annotations: { }
     # -- Labels for gateway service
-    labels: {}
+    labels: { }
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
@@ -1130,7 +1135,7 @@ gateway:
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
     ingressClassName: ""
     # -- Annotations for the gateway ingress
-    annotations: {}
+    annotations: { }
     # -- Hosts configuration for the gateway ingress
     hosts:
       - host: gateway.loki.example.com
@@ -1186,40 +1191,40 @@ networkPolicy:
   metrics:
     # -- Specifies the Pods which are allowed to access the metrics port.
     # As this is cross-namespace communication, you also need the namespaceSelector.
-    podSelector: {}
+    podSelector: { }
     # -- Specifies the namespaces which are allowed to access the metrics port
-    namespaceSelector: {}
+    namespaceSelector: { }
     # -- Specifies specific network CIDRs which are allowed to access the metrics port.
     # In case you use namespaceSelector, you also have to specify your kubelet networks here.
     # The metrics ports are also used for probes.
-    cidrs: []
+    cidrs: [ ]
   ingress:
     # -- Specifies the Pods which are allowed to access the http port.
     # As this is cross-namespace communication, you also need the namespaceSelector.
-    podSelector: {}
+    podSelector: { }
     # -- Specifies the namespaces which are allowed to access the http port
-    namespaceSelector: {}
+    namespaceSelector: { }
   alertmanager:
     # -- Specify the alertmanager port used for alerting
     port: 9093
     # -- Specifies the alertmanager Pods.
     # As this is cross-namespace communication, you also need the namespaceSelector.
-    podSelector: {}
+    podSelector: { }
     # -- Specifies the namespace the alertmanager is running in
-    namespaceSelector: {}
+    namespaceSelector: { }
   externalStorage:
     # -- Specify the port used for external storage, e.g. AWS S3
-    ports: []
+    ports: [ ]
     # -- Specifies specific network CIDRs you want to limit access to
-    cidrs: []
+    cidrs: [ ]
   discovery:
     # -- (int) Specify the port used for discovery
     port: null
     # -- Specifies the Pods labels used for discovery.
     # As this is cross-namespace communication, you also need the namespaceSelector.
-    podSelector: {}
+    podSelector: { }
     # -- Specifies the namespace the discovery Pods are running in
-    namespaceSelector: {}
+    namespaceSelector: { }
 
 tracing:
   jaegerAgentHost: ""
@@ -1228,7 +1233,7 @@ tracing:
 # Configuration for `minio` child chart
 # -------------------------------------
 minio:
-  enabled: false
+  enabled: true
   replicas: 1
   # Minio requires 2 to 16 drives for erasure code (drivesPerNode * replicas)
   # https://docs.min.io/docs/minio-erasure-code-quickstart-guide
@@ -1254,7 +1259,7 @@ minio:
       memory: 128Mi
 
 # Create extra manifests via values. Would be passed through `tpl` for templating
-extraObjects: []
+extraObjects: [ ]
 # - apiVersion: v1
 #   kind: ConfigMap
 #   metadata:
